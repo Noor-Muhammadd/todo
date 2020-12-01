@@ -1,3 +1,4 @@
+import React from 'react';
 import "./App.css";
 import TextField from "@material-ui/core/TextField";
 import { useState, useEffect } from "react";
@@ -6,18 +7,19 @@ import { db } from "./firebase_config";
 import firebase from "firebase";
 import TodoListItem from "./Todo";
 
-function App() {
+function Todo() {
   const [todos, setTodos] = useState([]);
   const [todoInput, setTodoInput] = useState("");
 
   useEffect(() => {
     getTodos();
-  }, []); // blank to run only on first launch
+  }, [setTodos]);
 
   function getTodos() {
     db.collection("todos").onSnapshot(function (querySnapshot) {
       setTodos(
         querySnapshot.docs.map((doc) => ({
+          key:doc.key,
           id: doc.id,
           todo: doc.data().todo,
           inprogress: doc.data().inprogress,
@@ -49,7 +51,7 @@ function App() {
           width: "100%",
         }}
       >
-        <h1>Sanskar Tiwari Todos App 😃</h1>
+        <h1>TO DO APPLICATION</h1>
         <form>
           <TextField
             id="standard-basic"
@@ -71,6 +73,7 @@ function App() {
         <div style={{ width: "90vw", maxWidth: "500px", marginTop: "24px" }}>
           {todos.map((todo) => (
             <TodoListItem
+              key = {todo}
               todo={todo.todo}
               inprogress={todo.inprogress}
               id={todo.id}
@@ -82,4 +85,4 @@ function App() {
   );
 }
 
-export default App;
+export default Todo;
